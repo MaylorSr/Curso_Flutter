@@ -1,0 +1,31 @@
+"List, Iterables y Sets"
+La diferencia entre Set y List, es que el Set elimina aquellos objetos repetidos de la lista, si quiero recuperar la lista ya que en el momento se encuentra en un iterable, 
+sólo se agregará .toList()
+Se sabe que es un <Iterable> gracias a que tiene paréntesis (1,2.2,3...).
+Una lista tiene la función where(), la cuál sirve para evaluar cada uno de los elementos que se encuentran dentro del listado.
+
+"Funciones y Parámetros"
+Establecer valor por defecto de un parámetro opcional en caso de que no llegue y sea potencialmente null. => int addNumber(int a, [int b = 0] ) => a+b;
+
+"Class"
+Para inicializar una variable que puede venir null o es opcional dentro del constructor lo podemos hacer: Heroe({required this.name, this.power = 'Sin poder'})
+
+"Assert"
+Controla la validación de los valores de cada atributo de una clase de manera, se pone con assert( num > 0, 'The number must be > 0') Va dentro del class.
+
+"Clases Abstractas y Enumeraciones"
+Una clase abstracta es una clase que no puede ser instanciada, pero sirve para crear un diferente molde. Sirve para aplicar diferentes patrones de estructura
+
+"Mixin"
+Sirve para que una clasa extienda de una clase normal y a su vez con la anotación "with" podremos "extender" de otra clase, es como tener un padre y una madre
+
+"Future"
+El future es una función que va a retonar algún valor en el futuro, si no se especifíca el tipo de dato que se espera con el Future<tipoDato>, el tipo de dato será "dynamic". 
+Por otro lado tenemos el Future.delayed() -> este lo que quiere decir es que se ejecutará una función una vez acabe los segundos.
+
+"Stream"
+El Stream es un flujo, cada segundo se va a estar emitiendo dicho valor. Stream.period()
+
+"Async *"
+Cuando es Async es que va a retornar un Future, pero si es con * es que retorna el tipo de dato especificado: Ejemplo un String: Future<String> getString() async * => "Hola";
+
