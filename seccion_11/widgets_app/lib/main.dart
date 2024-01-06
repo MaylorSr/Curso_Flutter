@@ -6,6 +6,7 @@ import 'package:widgets_app/config/theme/app_theme.dart';
 import 'presentation/providers/theme_provider.dart';
 
 void main() {
+  // El ProviderScope es para que toda la aplicación se encuentre envuelta de Riverpod
   runApp(const ProviderScope(child: MainApp()));
 }
 
