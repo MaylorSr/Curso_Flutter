@@ -1,0 +1,12 @@
+{
+    "appTitle": "Cinemapedia_es",
+
+    "home" : "Inicio",
+    "categories" : "Categorias",
+    "favorites" : "Favoritos",
+    "cine" : "En cine",
+    "popular":"Populares",
+    "proxiCine" : "Próximamente en cine",
+    "bestRate" : "Mejor calificada"
+
+}
