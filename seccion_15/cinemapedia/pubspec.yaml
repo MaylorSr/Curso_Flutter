@@ -1,0 +1,49 @@
+name: cinemapedia
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: '>=3.2.3 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  animate_do: ^3.1.2
+  card_swiper: ^3.0.1
+  dio: ^5.4.0
+  flutter_dotenv: ^5.1.0
+  flutter_riverpod: ^2.4.9
+  go_router: ^13.0.1
+  intl: ^0.18.1
+  shimmer: ^3.0.0
+  scrollable_list_tab_scroller: ^1.1.2
+  flutter_svg: ^2.0.9
+  cached_network_image: ^3.3.1
+
+
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - .env
+    - assets/images/lang/spain_lang.svg
+    - assets/images/lang/eng_lang.svg
+    - assets/images/lang/fr_lang.svg
+    - assets/images/not_found/image_notfound.png
+    - assets/images/load/reload.gif
+
+flutter_intl:
+  enabled: true
+  class_name: S
+  #main_locale: es
+
