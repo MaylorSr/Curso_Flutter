@@ -6,5 +6,6 @@
   "cine": "Au cinéma",
   "popular": "Populaires",
   "proxiCine": "Prochainement au cinéma",
-  "bestRate": "Meilleure note"
+  "bestRate": "Meilleure note",
+  "review" : "Review"
 }

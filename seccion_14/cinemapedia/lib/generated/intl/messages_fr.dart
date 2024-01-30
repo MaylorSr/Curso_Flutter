@@ -30,6 +30,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "home": MessageLookupByLibrary.simpleMessage("Inicio"),
         "popular": MessageLookupByLibrary.simpleMessage("Populaires"),
         "proxiCine":
-            MessageLookupByLibrary.simpleMessage("Prochainement au cinéma")
+            MessageLookupByLibrary.simpleMessage("Prochainement au cinéma"),
+        "review": MessageLookupByLibrary.simpleMessage("Review")
       };
 }

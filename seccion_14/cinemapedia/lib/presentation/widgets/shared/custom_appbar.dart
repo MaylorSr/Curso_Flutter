@@ -1,8 +1,10 @@
 import 'package:cinemapedia/config/lang/app_lang.dart';
+import 'package:cinemapedia/config/theme/app_theme.dart';
 import 'package:cinemapedia/generated/l10n.dart';
 import 'package:cinemapedia/presentation/provider/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
 
 class CustomAppBar extends ConsumerWidget {
   const CustomAppBar({super.key});
@@ -39,10 +41,11 @@ class CustomAppBar extends ConsumerWidget {
               ),
               const Spacer(),
               _LanguageWidget(
-                  activeLang: activeLang,
-                  listLanguage: listLanguage,
-                  changeLanguage: changeLanguage,
-                  notifierMovie: notifierMovie),
+                activeLang: activeLang,
+                listLanguage: listLanguage,
+                changeLanguage: changeLanguage,
+                notifierMovie: notifierMovie,
+              ),
               IconButton(
                 onPressed: () {},
                 icon: const Icon(Icons.search_outlined),
@@ -73,11 +76,22 @@ class _LanguageWidget extends StatelessWidget {
     final textAppBarStyle = Theme.of(context).textTheme.titleMedium;
 
     return PopupMenuButton(
-      elevation: 3,
+      elevation: 5,
+      color: Theme.of(context).disabledColor,
       icon: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          const Icon(
-            Icons.language_outlined,
+          ClipRRect(
+            borderRadius: BorderRadius.circular(5),
+            clipBehavior: Clip.antiAlias,
+            child: SvgPicture.asset(
+              activeLang.flagSvg,
+              width: AppTheme.withSize,
+              height: AppTheme.withSize,
+              clipBehavior: Clip.antiAlias,
+              excludeFromSemantics: true,
+              fit: BoxFit.contain,
+            ),
           ),
           const SizedBox(
             width: 2.5,
@@ -97,10 +111,28 @@ class _LanguageWidget extends StatelessWidget {
               value: e,
               onTap: () {
                 changeLanguage.changeLanguage(e);
+                notifierMovie.loadNextPage();
               },
-              child: Text(
-                e.code,
-                style: textAppBarStyle,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SvgPicture.asset(
+                    e.flagSvg,
+                    alignment: Alignment.centerLeft,
+                    width: AppTheme.withSize,
+                    height: AppTheme.withSize,
+                    clipBehavior: Clip.antiAlias,
+                    excludeFromSemantics: true,
+                    fit: BoxFit.cover,
+                    semanticsLabel: e.code,
+                  ),
+                  Text(
+                    e.code,
+                    style: textAppBarStyle?.copyWith(
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
               ),
             ),
           )

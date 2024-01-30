@@ -6,5 +6,6 @@
   "cine": "In cinema",
   "popular": "Popular",
   "proxiCine": "Coming soon to cinemas",
-  "bestRate": "Best rated"
+  "bestRate": "Best rated",
+  "review" : "Review"
 }

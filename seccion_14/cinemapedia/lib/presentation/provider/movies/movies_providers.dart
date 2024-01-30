@@ -9,10 +9,9 @@ import '../providers.dart';
 final getAllMoviesProvider =
     StateNotifierProvider<MoviesNotifier, List<Movie>>((ref) {
   final fetchMoreMovies = ref.watch(movieRepositoryProvider).getAllMovies;
-
   return MoviesNotifier(
     fetchMoreMovies: fetchMoreMovies,
-    language: 'es',
+    language: 'es'
   );
 });
 

@@ -2,18 +2,23 @@
 
 import 'dart:ui';
 
+
+const spainFlagSvg = 'assets/images/lang/spain_lang.svg';
+const engFlagSvg = 'assets/images/lang/eng_lang.svg';
+const frFlagSvg = 'assets/images/lang/fr_lang.svg';
+
 final langList = <AppLanguage>[
   AppLanguage(
     code: 'es',
-    flagSvg: '',
+    flagSvg: spainFlagSvg,
   ),
   AppLanguage(
     code: 'en',
-    flagSvg: '',
+    flagSvg: engFlagSvg,
   ),
   AppLanguage(
     code: 'fr',
-    flagSvg: '',
+    flagSvg: frFlagSvg,
   ),
 ];
 
@@ -25,7 +30,7 @@ class AppLanguage {
 
   AppLanguage({
     this.code = 'es',
-    this.flagSvg = '',
+    this.flagSvg = spainFlagSvg,
   });
 
   Locale getLanguage() => Locale(code);

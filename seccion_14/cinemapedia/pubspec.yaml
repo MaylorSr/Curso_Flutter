@@ -19,6 +19,12 @@ dependencies:
   go_router: ^13.0.1
   intl: ^0.18.1
   shimmer: ^3.0.0
+  scrollable_list_tab_scroller: ^1.1.2
+  flutter_svg: ^2.0.9
+  cached_network_image: ^3.3.1
+
+
+
 
 dev_dependencies:
   flutter_test:
@@ -30,6 +36,12 @@ flutter:
 
   assets:
     - .env
+    - assets/images/lang/spain_lang.svg
+    - assets/images/lang/eng_lang.svg
+    - assets/images/lang/fr_lang.svg
+    - assets/images/not_found/image_notfound.png
+    - assets/images/load/reload.gif
+
 flutter_intl:
   enabled: true
   class_name: S

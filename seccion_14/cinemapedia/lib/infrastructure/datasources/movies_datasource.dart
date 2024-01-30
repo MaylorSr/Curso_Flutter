@@ -2,6 +2,7 @@ import 'package:cinemapedia/config/constants/environment.dart';
 import 'package:cinemapedia/domain/datasources/movies_datasoruces.dart';
 import 'package:cinemapedia/domain/entities/movie.dart';
 import 'package:cinemapedia/infrastructure/mappers/movie_mapper.dart';
+import 'package:cinemapedia/infrastructure/models/moviedb/movie_details.dart';
 import 'package:cinemapedia/infrastructure/models/moviedb/moviedb_response.dart';
 import 'package:dio/dio.dart';
 
@@ -13,6 +14,8 @@ const String pathPopular = 'movie/popular';
 const String pathUpComing = 'movie/upcoming';
 
 const String pathTopRated = 'movie/top_rated';
+
+const String movieId = 'movie';
 
 class MoviesDataSource extends MoviesDataSources {
   MoviesDataSource();
@@ -95,5 +98,18 @@ class MoviesDataSource extends MoviesDataSources {
       },
     );
     return _jsonToMovies(response.data);
+  }
+
+  @override
+  Future<Movie> getMovieById(
+      {required String id, required String language}) async {
+    final response =
+        await dio.get("$movieId/$id", queryParameters: {'language': language});
+
+    if (response.statusCode != 200) throw Exception('Movie id not found');
+
+    final movieDetails = MovieDetails.fromJson(response.data);
+    final Movie movie = MovieMapper.movieDetailsToEntity(movieDetails);
+    return movie;
   }
 }
