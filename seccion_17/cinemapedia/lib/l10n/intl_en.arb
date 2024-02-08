@@ -1,0 +1,12 @@
+{
+  "appTitle": "Cinemapedia_en",
+  "home": "Home",
+  "categories": "Categories",
+  "favorites": "Favorites",
+  "cine": "In cinema",
+  "popular": "Popular",
+  "proxiCine": "Coming soon to cinemas",
+  "bestRate": "Best rated",
+  "review" : "Review",
+  "notFoundMovies" : "Not found movies."
+}
