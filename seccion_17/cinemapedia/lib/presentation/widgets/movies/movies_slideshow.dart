@@ -1,5 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:card_swiper/card_swiper.dart';
+import 'package:cinemapedia/config/router/navigation_router.dart';
+import 'package:cinemapedia/config/theme/app_theme.dart';
 import 'package:cinemapedia/domain/entities/movie.dart';
 import 'package:flutter/material.dart';
 
@@ -28,7 +30,7 @@ class MoviesSlideShow extends StatelessWidget {
             top: 0,
           ),
           builder: DotSwiperPaginationBuilder(
-            activeColor: colors.primary,
+            activeColor: colorIconMovie(context: context),
             activeSize: 18,
             color: colors.secondary,
             space: size.width * 0.010,
@@ -60,23 +62,26 @@ class _Slide extends StatelessWidget {
         ),
       ],
     );
-    return Padding(
-      padding: const EdgeInsets.only(
-        bottom: 30,
-      ),
-      child: DecoratedBox(
-        decoration: decoration,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: Image.network(
-            fit: BoxFit.cover,
-            movie.backdropPath,
-            loadingBuilder: (context, child, loadingProgress) {
-              if (loadingProgress != null) {
-                return const CircularProgressIndicator();
-              }
-              return FadeIn(child: child);
-            },
+    return GestureDetector(
+      onTap: () => NavigatorRouter.goToMovieId(context: context, id: movie.id),
+      child: Padding(
+        padding: const EdgeInsets.only(
+          bottom: 30,
+        ),
+        child: DecoratedBox(
+          decoration: decoration,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Image.network(
+              fit: BoxFit.cover,
+              movie.backdropPath,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress != null) {
+                  return const CircularProgressIndicator();
+                }
+                return FadeIn(child: child);
+              },
+            ),
           ),
         ),
       ),

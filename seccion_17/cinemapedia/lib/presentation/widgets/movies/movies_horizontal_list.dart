@@ -131,7 +131,8 @@ class _SlideMovie extends StatelessWidget {
             child: Text(
               movie.title,
               maxLines: 2,
-              style: titleStyle.titleSmall,
+              style:
+                  titleStyle.titleSmall?.copyWith(fontWeight: FontWeight.w600),
             ),
           ),
           //*Rate
@@ -154,7 +155,8 @@ class _SlideMovie extends StatelessWidget {
                 const Spacer(),
                 Text(
                   HumanFormat.number(movie.popularity),
-                  style: titleStyle.bodySmall,
+                  style: titleStyle.bodySmall
+                      ?.copyWith(fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -178,14 +180,16 @@ class _TittleWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final titleStyle = Theme.of(context).textTheme.titleLarge;
     return Container(
-      padding: const EdgeInsets.only(top: 10),
-      margin: const EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.only(top: 10, bottom: 5),
+      margin: const EdgeInsets.symmetric(
+        horizontal: 10,
+      ),
       child: Row(
         children: [
           if (tittle != null)
             Text(
               tittle!,
-              style: titleStyle,
+              style: titleStyle?.copyWith(fontWeight: FontWeight.bold),
             ),
           const Spacer(),
           if (subTittle != null)

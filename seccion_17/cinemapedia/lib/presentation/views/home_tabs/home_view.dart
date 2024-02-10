@@ -1,4 +1,5 @@
-
+import 'package:cinemapedia/config/helpers/functions.dart';
+import 'package:cinemapedia/config/theme/app_theme.dart';
 import 'package:cinemapedia/generated/l10n.dart';
 import 'package:cinemapedia/presentation/provider/providers.dart';
 import 'package:cinemapedia/presentation/widgets/shared/shimmer/full_screen_loader.dart';
@@ -195,14 +196,20 @@ class HomeViewState extends ConsumerState<HomeView> {
                   MoviesHorizontalList(
                     movies: getAllMoviesListView,
                     tittle: delegate.cine,
-                    subTittle: '20 Julio',
+                    subTittle: getMonth(
+                      month: DateTime.now().month,
+                      context: context,
+                    ),
                     loadNextPage: () =>
                         ref.read(getAllMoviesProvider.notifier).loadNextPage(),
                   ),
                   MoviesHorizontalList(
                     movies: getUpComingMoviesListView,
                     tittle: delegate.proxiCine,
-                    subTittle: '20 Julio',
+                    subTittle: getMonth(
+                      month: DateTime.now().month,
+                      context: context,
+                    ),
                     loadNextPage: () => ref
                         .read(getUpComingMoviesProvider.notifier)
                         .loadNextPage(),
@@ -210,7 +217,10 @@ class HomeViewState extends ConsumerState<HomeView> {
                   MoviesHorizontalList(
                     movies: getPopularMoviesListView,
                     tittle: delegate.popular,
-                    subTittle: '20 Julio',
+                    subTittle: getMonth(
+                      month: DateTime.now().month,
+                      context: context,
+                    ),
                     loadNextPage: () => ref
                         .read(getAllPopularMoviesProvider.notifier)
                         .loadNextPage(),

@@ -1,6 +1,7 @@
 import 'package:cinemapedia/config/lang/app_lang.dart';
 import 'package:cinemapedia/config/router/app_router.dart';
 import 'package:cinemapedia/config/theme/app_theme.dart';
+import 'package:cinemapedia/presentation/provider/theme/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -26,6 +27,8 @@ class MainApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final AppLanguage activeLang = ref.watch(languageNotifierProvider);
 
+    final AppTheme activeTheme = ref.watch(themeNotifierProvider);
+
     return MaterialApp.router(
       localizationsDelegates: const [
         S.delegate,
@@ -37,7 +40,7 @@ class MainApp extends ConsumerWidget {
       supportedLocales: S.delegate.supportedLocales,
       routerConfig: appRouter,
       debugShowCheckedModeBanner: false,
-      theme: AppTheme().getThemeData(),
+      theme: activeTheme.getThemeData(),
       // no se pone builder ni nada porque las rutas ya saben cual es la pantalla incial.
     );
   }

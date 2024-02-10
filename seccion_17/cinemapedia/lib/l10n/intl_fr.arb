@@ -7,5 +7,19 @@
   "popular": "Populaires",
   "proxiCine": "Prochainement au cinéma",
   "bestRate": "Meilleure note",
-  "review" : "Review"
+  "review": "Review",
+  "months": {
+    "january": "Janvier",
+    "february": "Février",
+    "march": "Mars",
+    "april": "Avril",
+    "may": "Mai",
+    "june": "Juin",
+    "july": "Juillet",
+    "august": "Août",
+    "september": "Septembre",
+    "october": "Octobre",
+    "november": "Novembre",
+    "december": "Décembre"
+  }
 }

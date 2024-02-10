@@ -1,15 +1,26 @@
 {
-    "appTitle": "Cinemapedia_es",
-
-    "home" : "Inicio",
-    "categories" : "Categorias",
-    "favorites" : "Favoritos",
-    "cine" : "En cine",
-    "popular":"Populares",
-    "proxiCine" : "Próximamente en cine",
-    "bestRate" : "Mejor calificada",
-    "review" : "Descripción",
-
-  "notFoundMovies" : "No se han encontrado películas."
-
+  "appTitle": "Cinemapedia_es",
+  "home": "Inicio",
+  "categories": "Categorias",
+  "favorites": "Favoritos",
+  "cine": "En cine",
+  "popular": "Populares",
+  "proxiCine": "Próximamente en cine",
+  "bestRate": "Mejor calificada",
+  "review": "Descripción",
+  "notFoundMovies": "No se han encontrado películas.",
+  "months": {
+    "january": "Enero",
+    "february": "Febrero",
+    "march": "Marzo",
+    "april": "Abril",
+    "may": "Mayo",
+    "june": "Junio",
+    "july": "Julio",
+    "august": "Agosto",
+    "september": "Septiembre",
+    "october": "Octubre",
+    "november": "Noviembre",
+    "december": "Diciembre"
+  }
 }

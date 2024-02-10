@@ -31,7 +31,6 @@ class CustomBottonNavigationBar extends StatelessWidget {
         _onItemTap(context, value);
       },
       elevation: 0,
-      backgroundColor: Theme.of(context).colorScheme.primaryContainer,
       enableFeedback: true,
       items: [
         BottomNavigationBarItem(

@@ -6,6 +6,7 @@ import 'package:cinemapedia/generated/l10n.dart';
 import 'package:cinemapedia/presentation/delegates/search_movie_delegate.dart';
 import 'package:cinemapedia/presentation/provider/providers.dart';
 import 'package:cinemapedia/presentation/provider/search/search_movie_provider.dart';
+import 'package:cinemapedia/presentation/provider/theme/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
@@ -26,6 +27,8 @@ class CustomAppBar extends ConsumerWidget {
     final MoviesNotifier notifierMovie =
         ref.read(getAllMoviesProvider.notifier);
 
+    final bool isDarkMode = ref.watch(themeNotifierProvider).isDarkMode;
+
     return SafeArea(
       //* Es para no dejar espacio abajo de este.
       bottom: false,
@@ -37,13 +40,23 @@ class CustomAppBar extends ConsumerWidget {
           width: double.infinity,
           child: Row(
             children: [
-              const Icon(Icons.movie_outlined),
+              Icon(Icons.movie_outlined,
+                  color: colorIconMovie(context: context)),
               SizedBox(width: MediaQuery.of(context).size.width * 0.025),
               Text(
                 S.of(context).appTitle,
                 style: textAppBarStyle,
               ),
               const Spacer(),
+              IconButton(
+                onPressed: () =>
+                    ref.read(themeNotifierProvider.notifier).toggleDarkMode(),
+                icon: Icon(
+                  isDarkMode
+                      ? Icons.light_mode_outlined
+                      : Icons.dark_mode_outlined,
+                ),
+              ),
               _LanguageWidget(
                 activeLang: activeLang,
                 listLanguage: listLanguage,
@@ -74,7 +87,7 @@ class CustomAppBar extends ConsumerWidget {
                   final searchQuery = ref.read(searchMovieProvider);
 
                   final listMovie = ref.read(searchedMoviesProvider);
-                  
+
                   showSearch<Movie?>(
                     query: searchQuery.query,
                     context: context,
@@ -140,7 +153,13 @@ class _LanguageWidget extends StatelessWidget {
 
     return PopupMenuButton(
       elevation: 5,
-      color: Theme.of(context).disabledColor,
+      clipBehavior: Clip.antiAlias,
+      splashRadius: 20,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      offset: const Offset(25, 10),
+      color: colorDesplegableLang(context: context),
       icon: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -191,9 +210,7 @@ class _LanguageWidget extends StatelessWidget {
                   ),
                   Text(
                     e.code,
-                    style: textAppBarStyle?.copyWith(
-                      color: Colors.white,
-                    ),
+                    style: textAppBarStyle
                   ),
                 ],
               ),
