@@ -13,6 +13,7 @@ class CustomBottonNavigationBar extends StatelessWidget {
         break;
 
       case 1:
+        NavigatorRouter.goToPopular(context: context);
         break;
 
       case 2:
@@ -38,8 +39,8 @@ class CustomBottonNavigationBar extends StatelessWidget {
           label: S.of(context).home,
         ),
         BottomNavigationBarItem(
-          icon: const Icon(Icons.category_outlined),
-          label: S.of(context).categories,
+          icon: const Icon(Icons.people_outline_sharp),
+          label: S.of(context).popular,
         ),
         BottomNavigationBarItem(
           icon: const Icon(Icons.favorite_border_outlined),

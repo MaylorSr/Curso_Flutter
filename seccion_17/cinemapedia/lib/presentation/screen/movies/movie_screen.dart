@@ -1,18 +1,28 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:animate_do/animate_do.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cinemapedia/config/constants/assets.dart';
+import 'package:cinemapedia/config/helpers/functions.dart';
+import 'package:cinemapedia/config/theme/app_theme.dart';
 import 'package:cinemapedia/domain/entities/actor.dart';
 import 'package:cinemapedia/domain/entities/movie.dart';
+import 'package:cinemapedia/domain/entities/movie_youtube.dart';
 import 'package:cinemapedia/domain/usecase/cache_actor_params.dart';
 import 'package:cinemapedia/domain/usecase/cache_movie_params.dart';
 import 'package:cinemapedia/generated/l10n.dart';
 import 'package:cinemapedia/presentation/provider/actors/actor_provider.dart';
 import 'package:cinemapedia/presentation/provider/movies/movie_info_provider.dart';
+import 'package:cinemapedia/presentation/provider/movies/movie_videos_provider.dart';
 import 'package:cinemapedia/presentation/provider/providers.dart';
 import 'package:cinemapedia/presentation/provider/storage/local_storage_provider.dart';
 import 'package:cinemapedia/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:isar/isar.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+
+import '../../provider/movies/movies_similar_provider.dart';
 
 class MovieScreen extends ConsumerStatefulWidget {
   static const name = 'movie-screen';
@@ -26,14 +36,22 @@ class MovieScreen extends ConsumerStatefulWidget {
 class MovieScreenState extends ConsumerState<MovieScreen> {
   @override
   void initState() {
+    final code = ref.read(languageNotifierProvider).code;
     ref.read(movieInfoProvider.notifier).loadMovieId(
           widget.movieId,
-          ref.read(languageNotifierProvider).code,
+          code,
         );
 
-    ref.read(actorInfoProvider.notifier).loadActorById(
-          widget.movieId,
-          ref.read(languageNotifierProvider).code,
+    ref.read(actorInfoProvider.notifier).loadActorById(widget.movieId, code);
+
+    ref
+        .read(movieVideosProvider.notifier)
+        .loadMovieVideosId(widget.movieId, code);
+
+    ref.read(moviesSimilarProvider.notifier).getSimilarMovies(
+          page: 1,
+          movieId: widget.movieId,
+          language: code,
         );
     super.initState();
   }
@@ -54,6 +72,53 @@ class MovieScreenState extends ConsumerState<MovieScreen> {
         ),
       );
     }
+
+    final List<Actor>? actorsByMovieId = ref.watch(actorInfoProvider)[
+        CacheActor(
+            movieId: movie.id.toString(),
+            lang: ref.watch(languageNotifierProvider).code)];
+
+    if (actorsByMovieId == null) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+          ),
+        ),
+      );
+    }
+
+    final List<MovieYoutube>? movieY =
+        ref.watch(movieVideosProvider)[CacheMovie(
+      movieId: movie.id.toString(),
+      lang: ref.watch(languageNotifierProvider).code,
+    )];
+
+    if (movieY == null) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+          ),
+        ),
+      );
+    }
+
+    final List<Movie>? moviesS = ref.watch(moviesSimilarProvider)[CacheMovie(
+      movieId: movie.id.toString(),
+      lang: ref.watch(languageNotifierProvider).code,
+    )];
+
+    if (moviesS == null) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       body: CustomScrollView(
         physics: const ClampingScrollPhysics(),
@@ -64,6 +129,9 @@ class MovieScreenState extends ConsumerState<MovieScreen> {
               (context, index) {
                 return _MovieDetails(
                   movie: movie,
+                  actores: actorsByMovieId,
+                  movieY: movieY,
+                  moviesS: moviesS,
                 );
               },
               childCount: 1,
@@ -76,39 +144,20 @@ class MovieScreenState extends ConsumerState<MovieScreen> {
 }
 
 class _ActorDetails extends ConsumerWidget {
-  final int movieId;
-  const _ActorDetails({required this.movieId});
+  final List<Actor> actorsByMovieId;
+
+  const _ActorDetails({required this.actorsByMovieId});
 
   @override
   Widget build(BuildContext context, ref) {
     final Size size = MediaQuery.of(context).size;
 
-    //*final textStyle = Theme.of(context).textTheme;
-
-    final List<Actor>? actorsByMovieId = ref.watch(actorInfoProvider)[
-        CacheActor(
-            movieId: movieId.toString(),
-            lang: ref.watch(languageNotifierProvider).code)];
-
-    if (actorsByMovieId == null) {
-      return const Center(
-        child: Column(
-          children: [
-            SizedBoxHeight(),
-            CircularProgressIndicator.adaptive(
-              strokeWidth: 2,
-            ),
-          ],
-        ),
-      );
-    }
-
     return SizedBox(
-      height: size.height * 0.32,
+      height: size.height * 0.35,
       child: ListView.builder(
         itemCount: actorsByMovieId.length,
         scrollDirection: Axis.horizontal,
-        //physics: const ClampingScrollPhysics(),
+        physics: const ClampingScrollPhysics(),
         itemBuilder: (context, index) {
           final Actor actor = actorsByMovieId[index];
 
@@ -131,7 +180,7 @@ class _ActorCard extends StatelessWidget {
     final Size size = MediaQuery.of(context).size;
 
     final textStyle = Theme.of(context).textTheme;
-    return FadeInRight(
+    return FadeInLeft(
       child: Container(
         width: size.width * 0.35,
         margin: const EdgeInsets.symmetric(horizontal: 5),
@@ -140,15 +189,21 @@ class _ActorCard extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(15),
-              child: CachedNetworkImage(
-                errorWidget: (context, url, error) {
+              child: FadeInImage(
+                height: 226,
+                fit: BoxFit.cover,
+                placeholderErrorBuilder: (context, error, stackTrace) {
+                  return Image.asset(bottleLoader);
+                },
+                imageErrorBuilder: (context, error, stackTrace) {
                   return Image.asset(
-                    'assets/images/not_found/image_notfound.png',
-                    fit: BoxFit.fitHeight,
+                    height: 226,
+                    notFoundImage,
+                    fit: BoxFit.cover,
                   );
                 },
-                imageUrl: actor.profilePath,
-                fit: BoxFit.fitHeight,
+                placeholder: const AssetImage(bottleLoader),
+                image: NetworkImage(actor.profilePath),
               ),
             ),
             Column(
@@ -180,8 +235,15 @@ class _ActorCard extends StatelessWidget {
 
 class _MovieDetails extends StatelessWidget {
   final Movie movie;
+  final List<Actor> actores;
+  final List<MovieYoutube> movieY;
+  final List<Movie> moviesS;
+
   const _MovieDetails({
     required this.movie,
+    required this.actores,
+    required this.movieY,
+    required this.moviesS,
   });
 
   @override
@@ -189,6 +251,8 @@ class _MovieDetails extends StatelessWidget {
     final Size size = MediaQuery.of(context).size;
 
     final textStyle = Theme.of(context).textTheme;
+
+    final s = S.of(context);
     return Padding(
       padding: const EdgeInsets.fromLTRB(10, 0, 10, 60),
       child: Column(
@@ -235,6 +299,7 @@ class _MovieDetails extends StatelessWidget {
                 children: movie.genreIds
                     .map(
                       (genre) => Chip(
+                        elevation: 2,
                         label: Text(genre),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -245,9 +310,38 @@ class _MovieDetails extends StatelessWidget {
               ),
             ),
           ],
+          const SizedBoxHeight(),
 
           //* Actores de la película
-          _ActorDetails(movieId: movie.id),
+          if (actores.isNotEmpty) ...[
+            _ActorDetails(actorsByMovieId: actores),
+            const SizedBoxHeight(),
+          ],
+
+          //* Video de youtube
+          if (movieY.isNotEmpty) ...[
+            YoutubeVideo(
+              size: size,
+              movieY: movieY,
+            ),
+            const SizedBoxHeight(),
+          ],
+          if (moviesS.isNotEmpty) ...[
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  s.recommends,
+                  maxLines: 1,
+                  style: textStyle.titleMedium?.copyWith(
+                    fontSize: 19,
+                  ),
+                ),
+                const SizedBoxHeight(),
+                MoviesHorizontalList(movies: moviesS),
+              ],
+            ),
+          ],
 
           //* Espacio al final
           SizedBox(
@@ -255,6 +349,75 @@ class _MovieDetails extends StatelessWidget {
           )
         ],
       ),
+    );
+  }
+}
+
+class YoutubeVideo extends StatefulWidget {
+  final List<MovieYoutube> movieY;
+  const YoutubeVideo({
+    super.key,
+    required this.size,
+    required this.movieY,
+  });
+
+  final Size size;
+
+  @override
+  State<YoutubeVideo> createState() => _YoutubeVideoState();
+}
+
+class _YoutubeVideoState extends State<YoutubeVideo> {
+  late YoutubePlayerController _controller;
+
+  @override
+  void initState() {
+    _controller = YoutubePlayerController(
+      initialVideoId: widget.movieY.first.key,
+      flags: const YoutubePlayerFlags(
+        autoPlay: false,
+        forceHD: true,
+        mute: false,
+        controlsVisibleAtStart: true,
+        showLiveFullscreenButton: false,
+      ),
+    );
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final textStyle = Theme.of(context).textTheme;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Videos',
+          maxLines: 1,
+          style: textStyle.titleMedium?.copyWith(
+            fontSize: 19,
+          ),
+        ),
+        Text(
+          '${'Trailer'} ${[
+            "${getMonth(
+              context: context,
+              month: widget.movieY.first.publishedAt.month,
+            )} ${widget.movieY.first.publishedAt.year}"
+          ]}',
+          maxLines: 1,
+          style: textStyle.bodyMedium?.copyWith(
+            fontSize: 19,
+          ),
+        ),
+        const SizedBoxHeight(),
+        YoutubePlayer(
+          width: double.infinity,
+          controller: _controller,
+          showVideoProgressIndicator: true,
+        ),
+      ],
     );
   }
 }
@@ -323,11 +486,11 @@ class CustomSliverAppBar extends ConsumerWidget {
         background: _BackgroundMovie(movie: movie),
         titlePadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
         title: Container(
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadiusDirectional.vertical(
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadiusDirectional.vertical(
               top: Radius.elliptical(40, 20),
             ),
-            color: Colors.white,
+            color: colorDesplegableLang(context: context),
           ),
           width: double.infinity,
           height: 20,

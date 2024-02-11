@@ -1,5 +1,6 @@
 // Define los métodos, sólo dice lo que necesita, pero no realiza el método.
 import 'package:cinemapedia/domain/entities/movie.dart';
+import 'package:cinemapedia/domain/entities/movie_youtube.dart';
 
 abstract class MoviesDataSources {
   MoviesDataSources();
@@ -14,5 +15,12 @@ abstract class MoviesDataSources {
 
   Future<Movie> getMovieById({required String id, required String language});
 
-  Future<List<Movie>> getMovieBySearch({required String query, required String language});
+  Future<List<Movie>> getMovieBySearch(
+      {required String query, required String language});
+
+  Future<List<MovieYoutube>> getMovieTrailer(
+      {required String id, required String language});
+
+  Future<List<Movie>> getSimilar(
+      {page = 1, required String idMovie, required String language});
 }

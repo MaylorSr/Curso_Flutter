@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cinemapedia/config/constants/assets.dart';
 import 'package:cinemapedia/config/helpers/human_format.dart';
 import 'package:cinemapedia/domain/entities/movie.dart';
 import 'package:cinemapedia/generated/l10n.dart';
@@ -261,17 +262,20 @@ class _MovieSearch extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: CachedNetworkImage(
-                    imageUrl: movie.posterPath,
-                    fit: BoxFit.contain,
-                    width: size.width * 0.35,
-                    errorWidget: (context, url, error) {
-                      //TODO: mostrar not found movie. Image assets.
-                      return const SizedBox();
-                    },
-                  ),
-                ),
+                    borderRadius: BorderRadius.circular(10),
+                    child: FadeInImage(
+                      fit: BoxFit.cover,
+                      width: size.width * 0.35,
+                      imageErrorBuilder: (context, error, stackTrace) =>
+                          Image.asset(
+                        notFoundImage,
+                        width: size.width * 0.35,
+                      ),
+                      placeholderErrorBuilder: (context, error, stackTrace) =>
+                          Image.asset(bottleLoader),
+                      placeholder: const AssetImage(bottleLoader),
+                      image: NetworkImage(movie.posterPath),
+                    )),
                 //* Para decirle que ocupe el resto que queda
                 Expanded(
                   child: Padding(

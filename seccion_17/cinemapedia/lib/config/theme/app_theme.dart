@@ -59,7 +59,7 @@ class AppTheme {
   static const double withSize = 16;
   static const double heigthSize = 16;
 
-  AppTheme({this.isDarkMode = false});
+  AppTheme({this.isDarkMode = true});
 
   AppTheme copyWith({bool? isDarkMode}) => AppTheme(
         isDarkMode: isDarkMode ?? this.isDarkMode,

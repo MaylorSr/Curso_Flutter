@@ -9,6 +9,7 @@
   "bestRate": "Best rated",
   "review": "Review",
   "notFoundMovies": "Not found movies.",
+  "recommends" : "Recommends / Similar",
   "months": {
     "january": "January",
     "february": "February",

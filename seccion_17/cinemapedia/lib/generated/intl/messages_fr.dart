@@ -31,6 +31,20 @@ class MessageLookup extends MessageLookupByLibrary {
         "popular": MessageLookupByLibrary.simpleMessage("Populaires"),
         "proxiCine":
             MessageLookupByLibrary.simpleMessage("Prochainement au cinéma"),
-        "review": MessageLookupByLibrary.simpleMessage("Review")
+        "review": MessageLookupByLibrary.simpleMessage("Review"),
+        "january": MessageLookupByLibrary.simpleMessage("Janvier"),
+        "february": MessageLookupByLibrary.simpleMessage("Février"),
+        "march": MessageLookupByLibrary.simpleMessage("Mars"),
+        "april": MessageLookupByLibrary.simpleMessage("Avril"),
+        "may": MessageLookupByLibrary.simpleMessage("Mai"),
+        "june": MessageLookupByLibrary.simpleMessage("Juin"),
+        "july": MessageLookupByLibrary.simpleMessage("Juillet"),
+        "august": MessageLookupByLibrary.simpleMessage("Août"),
+        "september": MessageLookupByLibrary.simpleMessage("Septembre"),
+        "october": MessageLookupByLibrary.simpleMessage("Octobre"),
+        "november": MessageLookupByLibrary.simpleMessage("Novembre"),
+        "december": MessageLookupByLibrary.simpleMessage("Décembre"),
+        "recommends":
+            MessageLookupByLibrary.simpleMessage("Recommends / Similar"),
       };
 }

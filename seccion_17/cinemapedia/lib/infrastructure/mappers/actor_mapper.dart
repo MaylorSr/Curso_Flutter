@@ -11,6 +11,8 @@ class ActorMapper {
       profilePath: cast.profilePath != null
           ? "$urlBaseImagen/${cast.profilePath}"
           : 'no-path',
+      character: cast.character,
+      popularity: cast.popularity,
     );
   }
 }

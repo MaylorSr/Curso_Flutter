@@ -9,6 +9,7 @@
   "bestRate": "Mejor calificada",
   "review": "Descripción",
   "notFoundMovies": "No se han encontrado películas.",
+  "recommends" : "Recomendadas / Similares",
   "months": {
     "january": "Enero",
     "february": "Febrero",

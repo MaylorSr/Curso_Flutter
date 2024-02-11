@@ -1,4 +1,5 @@
 import 'package:cinemapedia/domain/entities/movie.dart';
+import 'package:cinemapedia/domain/entities/movie_youtube.dart';
 
 abstract class MoviesRepository {
   Future<List<Movie>> getAllMovies({int page = 1, required String language});
@@ -10,4 +11,10 @@ abstract class MoviesRepository {
     required String query,
     required String language,
   });
+
+  Future<List<MovieYoutube>> getMovieTrailer(
+      {required String id, required String language});
+
+  Future<List<Movie>> getSimilar(
+      {page = 1, required String idMovie, required String language});
 }

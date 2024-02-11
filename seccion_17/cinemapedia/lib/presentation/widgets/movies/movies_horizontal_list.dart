@@ -1,4 +1,5 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:cinemapedia/config/constants/assets.dart';
 import 'package:cinemapedia/config/helpers/human_format.dart';
 import 'package:cinemapedia/config/router/navigation_router.dart';
 import 'package:cinemapedia/domain/entities/movie.dart';
@@ -99,26 +100,22 @@ class _SlideMovie extends StatelessWidget {
             width: 150,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: Image.network(
-                //* Para que todas tengan el mismo espacio
-                fit: BoxFit.cover,
-                movie.posterPath,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress != null) {
-                    return const Center(
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                      ),
-                    );
-                  }
-                  return GestureDetector(
-                    onTap: () => NavigatorRouter.goToMovieId(
-                      context: context,
-                      id: movie.id,
-                    ),
-                    child: FadeIn(child: child),
-                  );
-                },
+              child: GestureDetector(
+                onTap: () => NavigatorRouter.goToMovieId(
+                  context: context,
+                  id: movie.id,
+                ),
+                child: FadeInImage(
+                  imageErrorBuilder: (context, error, stackTrace) {
+                    return Image.asset(notFoundImage, );
+                  },
+                  placeholderErrorBuilder: (context, error, stackTrace) =>
+                      Image.asset(bottleLoader),
+                  height: 220,
+                  fit: BoxFit.cover,
+                  placeholder: const AssetImage(bottleLoader),
+                  image: NetworkImage(movie.posterPath),
+                ),
               ),
             ),
           ),

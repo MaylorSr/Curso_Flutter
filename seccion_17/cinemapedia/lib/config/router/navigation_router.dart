@@ -10,6 +10,10 @@ class NavigatorRouter {
     context.go('/home/0');
   }
 
+  static goToPopular({required BuildContext context}){
+    context.go('/home/1');
+  }
+
    static goToFavorites({required BuildContext context}){
     context.go('/home/2');
   }

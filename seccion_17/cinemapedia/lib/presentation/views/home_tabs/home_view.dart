@@ -1,5 +1,4 @@
 import 'package:cinemapedia/config/helpers/functions.dart';
-import 'package:cinemapedia/config/theme/app_theme.dart';
 import 'package:cinemapedia/generated/l10n.dart';
 import 'package:cinemapedia/presentation/provider/providers.dart';
 import 'package:cinemapedia/presentation/widgets/shared/shimmer/full_screen_loader.dart';
@@ -14,7 +13,7 @@ class HomeView extends ConsumerStatefulWidget {
   HomeViewState createState() => HomeViewState();
 }
 
-class HomeViewState extends ConsumerState<HomeView> {
+class HomeViewState extends ConsumerState<HomeView> with AutomaticKeepAliveClientMixin {
   @override
   void initState() {
     super.initState();
@@ -27,6 +26,7 @@ class HomeViewState extends ConsumerState<HomeView> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     //*final getAllMovies = ref.watch(getAllMoviesProvider);
     final initialLoading = ref.watch(initalLoadingProvider);
 
@@ -207,7 +207,7 @@ class HomeViewState extends ConsumerState<HomeView> {
                     movies: getUpComingMoviesListView,
                     tittle: delegate.proxiCine,
                     subTittle: getMonth(
-                      month: DateTime.now().month,
+                      month: DateTime.now().month + 2,
                       context: context,
                     ),
                     loadNextPage: () => ref
@@ -242,4 +242,7 @@ class HomeViewState extends ConsumerState<HomeView> {
       ],
     );
   }
+  
+  @override
+  bool get wantKeepAlive => true;
 }
