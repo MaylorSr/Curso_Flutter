@@ -11,5 +11,7 @@ class Environment {
 
   static String registerUrl = "/auth/register";
 
+  static String getProducts = "/products";
+
   static String apiUrl = dotenv.env['API_URL'] ?? '';
 }

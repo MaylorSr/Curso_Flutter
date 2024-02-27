@@ -6,58 +6,68 @@ import 'package:teslo_shop/features/products/products.dart';
 
 import 'app_router_notifier.dart';
 
-final goRouterProvider = Provider((ref) {
+final goRouterProvider = Provider(
+  (ref) {
+    final goRouterNotifier = ref.read(goRouterNotifierProvider);
 
-  final goRouterNotifier = ref.read(goRouterNotifierProvider);
+    return GoRouter(
+      initialLocation: '/splash',
+      refreshListenable: goRouterNotifier,
+      routes: [
+        ///* Primera pantalla
+        GoRoute(
+          path: '/splash',
+          builder: (context, state) => const CheckAuthStatusScreen(),
+        ),
 
-  return GoRouter(
-    initialLocation: '/splash',
-    refreshListenable: goRouterNotifier,
-    routes: [
-      ///* Primera pantalla
-      GoRoute(
-        path: '/splash',
-        builder: (context, state) => const CheckAuthStatusScreen(),
-      ),
+        ///* Auth Routes
+        GoRoute(
+          path: '/login',
+          builder: (context, state) => const LoginScreen(),
+        ),
+        GoRoute(
+          path: '/register',
+          builder: (context, state) => const RegisterScreen(),
+        ),
 
-      ///* Auth Routes
-      GoRoute(
-        path: '/login',
-        builder: (context, state) => const LoginScreen(),
-      ),
-      GoRoute(
-        path: '/register',
-        builder: (context, state) => const RegisterScreen(),
-      ),
+        ///* Product Routes
+        GoRoute(
+          path: '/',
+          builder: (context, state) => const ProductsScreen(),
+        ),
 
-      ///* Product Routes
-      GoRoute(
-        path: '/',
-        builder: (context, state) => const ProductsScreen(),
-      ),
-    ],
+        //* Product Details
+        GoRoute(
+          path: '/product/:id',
+          builder: (context, state) => ProductDetailsScreen(
+            productId: state.params['id'] ?? '',
+          ),
+        ),
+      ],
+      redirect: (context, state) {
+        final isGoingTo = state.subloc;
+        final authStatus = goRouterNotifier.authStatus;
 
-    redirect: (context, state) {
-      
-      final isGoingTo = state.subloc;
-      final authStatus = goRouterNotifier.authStatus;
-
-      if ( isGoingTo == '/splash' && authStatus == AuthStatus.checking ) return null;
-
-      if ( authStatus == AuthStatus.notAuthenticated ) {
-        if ( isGoingTo == '/login' || isGoingTo == '/register' ) return null;
-
-        return '/login';
-      }
-
-      if ( authStatus == AuthStatus.authenticated ) {
-        if ( isGoingTo == '/login' || isGoingTo == '/register' || isGoingTo == '/splash' ){
-           return '/';
+        if (isGoingTo == '/splash' && authStatus == AuthStatus.checking) {
+          return null;
         }
-      }
 
+        if (authStatus == AuthStatus.notAuthenticated) {
+          if (isGoingTo == '/login' || isGoingTo == '/register') return null;
 
-      return null;
-    },
-  );
-});
+          return '/login';
+        }
+
+        if (authStatus == AuthStatus.authenticated) {
+          if (isGoingTo == '/login' ||
+              isGoingTo == '/register' ||
+              isGoingTo == '/splash') {
+            return '/';
+          }
+        }
+
+        return null;
+      },
+    );
+  },
+);
