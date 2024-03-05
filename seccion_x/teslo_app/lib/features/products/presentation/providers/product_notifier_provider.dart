@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../products.dart';
-import 'product_repository_provider.dart';
 
 final productsStateNotifierProvider =
     StateNotifierProvider<ProductStateNotifier, ProductsState>(
@@ -18,6 +17,30 @@ class ProductStateNotifier extends StateNotifier<ProductsState> {
 
   ProductStateNotifier({required this.repository}) : super(ProductsState()) {
     loadNextPage();
+  }
+
+  Future<bool> createOrUpdateProduct(
+      {required Map<String, dynamic> productLike}) async {
+    try {
+      final product =
+          await repository.createUpdateProduct(productLike: productLike);
+      final isProductInList =
+          state.products.any((element) => product.id == element.id);
+
+      if (!isProductInList) {
+        state = state.copyWith(products: [...state.products, product]);
+        return true;
+      }
+
+      state = state.copyWith(
+        products: state.products
+            .map((element) => (element.id == product.id) ? product : element)
+            .toList(),
+      );
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   Future loadNextPage() async {

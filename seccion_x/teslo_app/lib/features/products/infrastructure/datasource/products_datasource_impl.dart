@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:teslo_shop/config/config.dart';
+import 'package:teslo_shop/exceptions/request_exception_data.dart';
 import 'package:teslo_shop/features/products/domain/products_domain.dart';
 import 'package:teslo_shop/features/products/infrastructure/products_infrastructure.dart';
 
@@ -14,15 +15,48 @@ class ProductsDataSourceImpl extends ProductsDataSources {
 
   @override
   Future<Product> createUpdateProduct(
-      {required Map<String, dynamic> productLike}) {
-    // TODO: implement createUpdateProduct
-    throw UnimplementedError();
+      {required Map<String, dynamic> productLike}) async {
+    //* Para saber si tengo que actualizar o crear el producto es por el id cuando me venga el product, ya que si lo creo no establezco el id
+
+    try {
+      final String? id = productLike['id'];
+      final String method = id == null ? 'POST' : 'PATCH';
+      final String url = id == null ? '/post' : '/products/$id';
+
+      productLike.remove('id');
+
+      final response = await dio.request(
+        url,
+        data: productLike,
+        options: Options(
+          method: method,
+        ),
+      );
+      final product = ProductMapper.jsonToEntity(response.data);
+      return product;
+    } catch (e) {
+      throw Exception();
+    }
   }
 
   @override
-  Future<Product> getProductById({required String id}) {
-    // TODO: implement getProductById
-    throw UnimplementedError();
+  Future<Product> getProductById({required String id}) async {
+    try {
+      final response = await dio.get("${Environment.getProductById}$id");
+
+      final Product product = ProductMapper.jsonToEntity(response.data);
+
+      return product;
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 404) {
+        throw NotFoundException(
+            statusCode: 404, errMessage: "El id: $id no existe.");
+      }
+      throw Exception;
+    } catch (e) {
+      print(e);
+      throw Exception();
+    }
   }
 
   @override

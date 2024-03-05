@@ -13,5 +13,7 @@ class Environment {
 
   static String getProducts = "/products";
 
+  static String getProductById = "/products/";
+
   static String apiUrl = dotenv.env['API_URL'] ?? '';
 }
