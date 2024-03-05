@@ -1,7 +1,6 @@
-import 'dart:ffi';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:teslo_shop/features/shared/shared.dart';
 
 import '../../products.dart';
@@ -12,42 +11,64 @@ class ProductDetailsScreen extends ConsumerWidget {
 
   const ProductDetailsScreen({super.key, required this.productId});
 
+  void _showSnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final productState = ref.watch(productProvider(productId));
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "Editar Producto",
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.camera_alt_outlined),
-            onPressed: () {
-              /* ref.read(
-                productProvider(productId).notifier,
-              ); */
-            },
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            "Editar Producto",
           ),
-        ],
-      ),
-      body: productState.isLoading
-          ? const FullScreenLoader()
-          : _ProductView(product: productState.product!),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          if (productState.product == null) {
-            return;
-          }
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.camera_alt_outlined),
+              onPressed: () {
+                //todo: LA CAMARA NO LA ABRE AHORA MISMO
+                /* ref.read(
+                  productProvider(productId).notifier,
+                ); */
+              },
+            ),
+          ],
+        ),
+        body: productState.isLoading
+            ? const FullScreenLoader()
+            : _ProductView(product: productState.product!),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            if (productState.product == null) {
+              return;
+            }
 
-          ref
-              .read(
-                  productStateNotifierProvider(productState.product!).notifier)
-              .onFormSubmit();
-        },
-        child: const Icon(
-          Icons.save_as_outlined,
+            await ref
+                .read(productStateNotifierProvider(productState.product!)
+                    .notifier)
+                .onFormSubmit()
+                .then(
+                  (value) => value
+                      ? {
+                          _showSnackBar(context, "Guardado correctamente."),
+                          context.pop()
+                        }
+                      : _showSnackBar(context,
+                          "Algo ha salido mal, verifica los campos que estén vacíos."),
+                );
+          },
+          child: const Icon(
+            Icons.save_as_outlined,
+          ),
         ),
       ),
     );
@@ -201,6 +222,7 @@ class _SizeSelector extends StatelessWidget {
       }).toList(),
       selected: Set.from(selectedSizes),
       onSelectionChanged: (newSelection) {
+        FocusScope.of(context).unfocus();
         onSizesChange!(List.from(newSelection));
       },
       multiSelectionEnabled: true,
@@ -237,6 +259,7 @@ class _GenderSelector extends StatelessWidget {
         }).toList(),
         selected: {selectedGender},
         onSelectionChanged: (newSelection) {
+          FocusScope.of(context).unfocus();
           onGenderChanged!(
             newSelection.toList().first,
           );

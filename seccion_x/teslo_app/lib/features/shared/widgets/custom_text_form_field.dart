@@ -32,6 +32,7 @@ class CustomTextFormField extends StatelessWidget {
 
     const borderRadius = Radius.circular(15);
 
+    final FocusNode focusNode = FocusNode();
     return Container(
       // padding: const EdgeInsets.only(bottom: 0, top: 15),
       decoration: BoxDecoration(
@@ -47,6 +48,10 @@ class CustomTextFormField extends StatelessWidget {
                 offset: const Offset(0, 5))
           ]),
       child: TextFormField(
+        onTapOutside: (event) {
+          focusNode.unfocus();
+        },
+        focusNode: focusNode,
         onFieldSubmitted: onFieldSubmitted,
         onChanged: onChanged,
         validator: validator,

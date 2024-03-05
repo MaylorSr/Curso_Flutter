@@ -21,7 +21,7 @@ class ProductsDataSourceImpl extends ProductsDataSources {
     try {
       final String? id = productLike['id'];
       final String method = id == null ? 'POST' : 'PATCH';
-      final String url = id == null ? '/post' : '/products/$id';
+      final String url = id == null ? '/products' : '/products/$id';
 
       productLike.remove('id');
 

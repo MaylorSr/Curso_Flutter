@@ -47,7 +47,7 @@ class FormProductStateNotifier extends StateNotifier<ProductFormState> {
     if (onSubmitCallBack == null) return false;
 
     final productLike = {
-      "id": state.id,
+      "id": state.id == 'new' ? null : state.id,
       "title": state.title.value,
       "price": state.price.value,
       "description": state.description,
@@ -65,8 +65,7 @@ class FormProductStateNotifier extends StateNotifier<ProductFormState> {
     };
 
     try {
-      await onSubmitCallBack!(productLike: productLike);
-      return true;
+      return await onSubmitCallBack!(productLike: productLike);
     } catch (e) {
       return false;
     }
